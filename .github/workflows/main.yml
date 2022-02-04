@@ -17,19 +17,8 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-      - name: Cache Maven packages
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-          
+      - name: Install
+        run: mvn clean install   
       - name: Test
         run: mvn test
       - name: Build and Sonar analysis
@@ -45,3 +34,5 @@ jobs:
         uses: SonarSource/sonarqube-quality-gate-action@v1.0.0
         with:
           scanMetadataReportFile: /home/runner/work/maven-actions/maven-actions/target/sonar/report-task.txt
+      - name: Packaging
+        run: mvn package
